@@ -58,7 +58,12 @@ func osaDialog(title, text, icon string) (bool, error) {
 		return false, err
 	}
 
-	out, err := exec.Command(osa, "-e", `tell application "System Events" to display dialog "`+text+`" with title "`+title+`" buttons {"OK"} default button "OK" with icon `+icon+``).Output()
+	if icon == "stop" {
+		icon = "kStopIcon"
+	}
+	osaCommand := `tell application "System Events" to display dialog "`+text+`" with title "`+title+`" buttons {"OK"} default button "OK" with icon `+icon+``
+	
+	out, err := exec.Command(osa, "-e", "set kStopIcon to stop", "-e", osaCommand).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			ws := exitError.Sys().(syscall.WaitStatus)
