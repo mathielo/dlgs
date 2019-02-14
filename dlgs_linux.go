@@ -14,7 +14,11 @@ func cmdPath() (string, error) {
 		e := err
 		cmd, err = exec.LookPath("zenity")
 		if err != nil {
-			return "", errors.New("dlgs: " + err.Error() + "; " + e.Error())
+			err2 := err
+			cmd, err = exec.LookPath("kdialog")
+			if err2 != nil {
+				return "", errors.New("dlgs: " + err.Error() + "; " + e.Error() + "; " + err2.Error())
+			}
 		}
 	}
 
